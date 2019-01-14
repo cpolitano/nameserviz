@@ -30,3 +30,24 @@ func (k Keeper) ResolveName(ctx sdk.Context, name string) string {
 	bz := store.Get([]byte(name)) // cast string to []byte
 	return string(bz) // cast []byte to string
 }
+
+// returns bool whether or not the name already has an owner
+func (k Keeper) HasOwner(ctx sdk.Context, name string) bool {
+	store := ctx.KVStore(k.ownersStoreKey)
+	bz := store.Get([]byte(name))
+	return bz != nil
+}
+
+// get the current owner of a name
+// sdk.AccAddress is type alias for []byte
+func (k Keeper) GetOwner(ctx sdk.Context, name string) sdk.AccAddress {
+	store := ctx.KVStore(k.ownersStoreKey)
+	bz := store.Get([]byte(name))
+	return bz
+}
+
+// sets the current owner of a name
+func (k Keeper) SetOwner(ctx sdk.Context, name string, owner sdk.AccAddress) {
+	store := ctx.KVStore(k.ownersStoreKey)
+	store.Set([]byte(name), owner)
+}
