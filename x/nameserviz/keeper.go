@@ -15,7 +15,7 @@ type Keeper struct {
   ownersStoreKey sdk.StoreKey // key to owner of a given name
   pricesStoreKey sdk.StoreKey // key to price paid for name
 
-  cdc *codec.Codec // wire codec for binary encoding/decoding
+  cdc *codec.Codec // codec for binary encoding/decoding
 }
 
 // sets the value string that a name resolves to
@@ -69,4 +69,15 @@ func (k Keeper) GetPrice(ctx sdk.Context, name string) sdk.Coins {
 func (k Keeper) SetPrice(ctx sdk.Context, name string, price sdk.Coins) {
 	store := ctx.KVStore(k.pricesStoreKey)
 	store.Set([]byte(name), k.cdc.MustMarshalBinaryBare(price))
+}
+
+// NewKeeper creates new instances of the nameserviz Keeper
+func NewKeeper(coinKeeper bank.Keeper, namesStoreKey sdk.StoreKey, ownersStoreKey sdk.StoreKey, priceStoreKey sdk.StoreKey, cdc *codec.Codec) Keeper {
+	return Keeper{
+		coinKeeper:     coinKeeper,
+		namesStoreKey:  namesStoreKey,
+		ownersStoreKey: ownersStoreKey,
+		pricesStoreKey: priceStoreKey,
+		cdc:            cdc,
+	}
 }
