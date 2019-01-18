@@ -18,3 +18,12 @@ func NewHandler(keeper Keeper) sdk.Handler {
 		}
 	}
 }
+
+// Handle MsgSetName
+func handleMsgSetName(ctx sdk.Context, keeper Keeper, msg MsgSetName) sdk.Result {
+	if !msg.Owner.Equals(keeper.GetOwner(ctx, msg.NameID)) { // Checks if the the msg sender is the same as the current owner
+		return sdk.ErrUnauthorized("Incorrect Owner").Result() // If not, throw an error
+	}
+	keeper.SetName(ctx, msg.NameID, msg.Value) // If so, set the name to the value specified in the msg.
+	return sdk.Result{}                        // return
+}
