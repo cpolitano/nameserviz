@@ -63,21 +63,22 @@ func (msg MsgSetName) GetSigners() []sdk.AccAddress {
 // MsgBuyName
 // MsgBuyName defines the BuyName message
 type MsgBuyName struct {
-	Name string
-	Bid    sdk.Coins
-	Buyer  sdk.AccAddress
+	Name  string
+	Bid   sdk.Coins
+	Buyer sdk.AccAddress
 }
 
 // NewMsgBuyName is the constructor function for MsgBuyName
 func NewMsgBuyName(name string, bid sdk.Coins, buyer sdk.AccAddress) MsgBuyName {
 	return MsgBuyName{
-		Name: name,
-		Bid:    bid,
-		Buyer:  buyer,
+		Name:  name,
+		Bid:   bid,
+		Buyer: buyer,
 	}
 }
 
 // ValidateBasic Implements Msg.
+// pure function, cannot query appliction state
 func (msg MsgBuyName) ValidateBasic() sdk.Error {
 	if msg.Buyer.Empty() {
 		return sdk.ErrInvalidAddress(msg.Buyer.String())
