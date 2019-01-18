@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+// MsgSetName
 // defines req for SetName msg
 type MsgSetName struct {
 	NameID string
@@ -57,4 +58,21 @@ func (msg MsgSetName) GetSignBytes() []byte {
 // owner must sign transaction to reset the name
 func (msg MsgSetName) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{msg.Owner}
+}
+
+// MsgBuyName
+// MsgBuyName defines the BuyName message
+type MsgBuyName struct {
+	Name string
+	Bid    sdk.Coins
+	Buyer  sdk.AccAddress
+}
+
+// NewMsgBuyName is the constructor function for MsgBuyName
+func NewMsgBuyName(name string, bid sdk.Coins, buyer sdk.AccAddress) MsgBuyName {
+	return MsgBuyName{
+		Name: name,
+		Bid:    bid,
+		Buyer:  buyer,
+	}
 }
