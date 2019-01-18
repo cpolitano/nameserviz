@@ -1,16 +1,16 @@
 package nameserviz
 
 import (
-  "encoding/json"
+	"encoding/json"
 
-sdk "github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // defines req for SetName msg
 type MsgSetName struct {
-  NameID string
-  Value string
-  Owner sdk.AccAddress
+	NameID string
+	Value  string
+	Owner  sdk.AccAddress
 }
 
 // NewMsgSetName is a constructor function for MsgSetName
@@ -28,7 +28,7 @@ func NewMsgSetName(name string, value string, owner sdk.AccAddress) MsgSetName {
 func (msg MsgSetName) Route() string { return "nameserviz" }
 
 // Name should return the action
-func (msg MsgSetName) Type() string { return "set_name"}
+func (msg MsgSetName) Type() string { return "set_name" }
 
 // ValdateBasic Implements Msg.
 // stateless check that msg data is valid
