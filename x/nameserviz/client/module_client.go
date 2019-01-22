@@ -1,11 +1,12 @@
 package client
+
 // standard way for modules to export client functionality
 
 import (
-  "github.com/cosmos/cosmos-sdk/client"
-nameservicecmd "github.com/cpolitano/nameserviz/x/nameserviz/client/cli" // import my cli code
-"github.com/spf13/cobra"
-amino "github.com/tendermint/go-amino"
+	"github.com/cosmos/cosmos-sdk/client"
+	nameservicecmd "github.com/cpolitano/nameserviz/x/nameserviz/client/cli" // import my cli code
+	"github.com/spf13/cobra"
+	amino "github.com/tendermint/go-amino"
 )
 
 // ModuleClient exports all client functionality from this module

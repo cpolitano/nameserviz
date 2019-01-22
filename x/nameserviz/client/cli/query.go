@@ -1,11 +1,11 @@
 package cli
 
 import (
-  "fmt"
+	"fmt"
 
-"github.com/cosmos/cosmos-sdk/client/context"
-"github.com/cosmos/cosmos-sdk/codec"
-"github.com/spf13/cobra"
+	"github.com/cosmos/cosmos-sdk/client/context"
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/spf13/cobra"
 )
 
 // GetCmdResolveName queries information about a name
@@ -18,10 +18,10 @@ func GetCmdResolveName(queryRoute string, cdc *codec.Codec) *cobra.Command {
 			cliCtx := context.NewCLIContext().WithCodec(cdc) // CLIContext stores user input data and app config
 			name := args[0]
 
-      // path in QueryWithData maps to names in query router
-      // custom refers to Queriers
-      // 2nd piece is nameserviz, the module to route the query to
-      // last piece is query
+			// path in QueryWithData maps to names in query router
+			// custom refers to Queriers
+			// 2nd piece is nameserviz, the module to route the query to
+			// last piece is query
 			res, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/resolve/%s", queryRoute, name), nil)
 			if err != nil {
 				fmt.Printf("could not resolve name - %s \n", string(name))
