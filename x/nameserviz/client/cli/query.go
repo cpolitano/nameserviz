@@ -15,9 +15,13 @@ func GetCmdResolveName(queryRoute string, cdc *codec.Codec) *cobra.Command {
 		Short: "resolve name",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cliCtx := context.NewCLIContext().WithCodec(cdc)
+			cliCtx := context.NewCLIContext().WithCodec(cdc) // CLIContext stores user input data and app config
 			name := args[0]
 
+      // path in QueryWithData maps to names in query router
+      // custom refers to Queriers
+      // 2nd piece is nameserviz, the module to route the query to
+      // last piece is query
 			res, err := cliCtx.QueryWithData(fmt.Sprintf("custom/%s/resolve/%s", queryRoute, name), nil)
 			if err != nil {
 				fmt.Printf("could not resolve name - %s \n", string(name))
