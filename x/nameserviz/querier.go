@@ -39,3 +39,28 @@ func queryResolve(ctx sdk.Context, path []string, req abci.RequestQuery, keeper 
 
 	return []byte(value), nil
 }
+
+// nolint: unparam
+func queryWhois(ctx sdk.Context, path []string, req abci.RequestQuery, keeper Keeper) (res []byte, err sdk.Error) {
+	name := path[0]
+
+	whois := Whois{}
+
+	whois.Value = keeper.ResolveName(ctx, name)
+	whois.Owner = keeper.GetOwner(ctx, name)
+	whois.Price = keeper.GetPrice(ctx, name)
+
+	bz, err2 := codec.MarshalJSONIndent(keeper.cdc, whois)
+	if err2 != nil {
+		panic("could not marshal result to JSON")
+	}
+
+	return bz, nil
+}
+
+// Whois represents a name -> value lookup
+type Whois struct {
+	Value string         `json:"value"`
+	Owner sdk.AccAddress `json:"owner"`
+	Price sdk.Coins      `json:"price"`
+}
