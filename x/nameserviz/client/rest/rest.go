@@ -56,3 +56,87 @@ func whoIsHandler(cdc *codec.Codec, cliCtx context.CLIContext, storeName string)
 		utils.PostProcessResponse(w, cdc, res, cliCtx.Indent)
 	}
 }
+
+type buyNameReq struct {
+	BaseReq utils.BaseReq `json:"base_req"`
+	Name    string        `json:"name"`
+	Amount  string        `json:"amount"`
+	Buyer   string        `json:"buyer"`
+}
+
+func buyNameHandler(cdc *codec.Codec, cliCtx context.CLIContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req buyNameReq
+		err := utils.ReadRESTReq(w, r, cdc, &req)
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		baseReq := req.BaseReq.Sanitize()
+		if !baseReq.ValidateBasic(w) {
+			return
+		}
+
+		addr, err := sdk.AccAddressFromBech32(req.Buyer)
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		coins, err := sdk.ParseCoins(req.Amount)
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		// create the message
+		msg := nameservice.NewMsgBuyName(req.Name, coins, addr)
+		err = msg.ValidateBasic()
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		utils.CompleteAndBroadcastTxREST(w, r, cliCtx, baseReq, []sdk.Msg{msg}, cdc)
+	}
+}
+
+type setNameReq struct {
+	BaseReq utils.BaseReq `json:"base_req"`
+	Name    string        `json:"name"`
+	Value   string        `json:"value"`
+	Owner   string        `json:"owner"`
+}
+
+func setNameHandler(cdc *codec.Codec, cliCtx context.CLIContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req setNameReq
+		err := utils.ReadRESTReq(w, r, cdc, &req)
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		baseReq := req.BaseReq.Sanitize()
+		if !baseReq.ValidateBasic(w) {
+			return
+		}
+
+		addr, err := sdk.AccAddressFromBech32(req.Owner)
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		// create the message
+		msg := nameservice.NewMsgSetName(req.Name, req.Value, acc)
+		err = msg.ValidateBasic()
+		if err != nil {
+			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		utils.CompleteAndBroadcastTxREST(w, r, cliCtx, baseReq, []sdk.Msg{msg}, cdc)
+	}
+}
