@@ -114,3 +114,51 @@ func NewNameServizApp(logger log.logger, db dbm.DB) *nameServizApp {
 
 	return app
 }
+
+// GenesisState represents chain state at the start of the chain. Any initial state (account balances) are stored here.
+type GenesisState struct {
+	Accounts []*auth.BaseAccount `json:"accounts"`
+}
+
+func (app *nameServizApp) initChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain {
+	stateJSON := req.AppStateBytes
+
+	genesisState := new(GenesisState)
+	err := app.cdc.UnmarshalJSON(stateJSON, genesisState)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, acc := range genesisState.Accounts {
+		acc.AccountNumber = app.accountKeeper.GetNextAccountNumber(ctx)
+		app.accountKeeper.SetAccount(ctx, acc)
+	}
+
+	return abci.ResponseInitChain{}
+}
+
+// ExportAppStateAndValidators does the things
+func (app *nameServizApp) ExportAppStateAndValidators() (appState json.RawMessage, validators []tmtypes.GenesisValidator, err error) {
+	ctx := app.NewContext(true, abci.Header{})
+	accounts := []*auth.BaseAccount{}
+
+	appendAccountsFn := func(acc auth.Account) bool {
+		account := &auth.BaseAccount{
+			Address: acc.GetAddress(),
+			Coins:   acc.GetCoins(),
+		}
+
+		accounts = append(accounts, account)
+		return false
+	}
+
+	app.accountKeeper.IterateAccounts(ctx, appendAccountsFn)
+
+	genState := GenesisState{Accounts: accounts}
+	appState, err = codec.MarshalJSONIndent(app.cdc, genState)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return appState, validators, err
+}
