@@ -162,3 +162,15 @@ func (app *nameServizApp) ExportAppStateAndValidators() (appState json.RawMessag
 
 	return appState, validators, err
 }
+
+// MakeCodec generates the necessary codecs for Amino
+func MakeCodec() *codec.Codec {
+	var cdc = codec.New()
+	auth.RegisterCodec(cdc)
+	bank.RegisterCodec(cdc)
+	nameserviz.RegisterCodec(cdc)
+	stake.RegisterCodec(cdc)
+	sdk.RegisterCodec(cdc)
+	codec.RegisterCrypto(cdc)
+	return cdc
+}
