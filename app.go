@@ -58,5 +58,59 @@ func NewNameServizApp(logger log.logger, db dbm.DB) *nameServizApp {
 		keyFeeCollection: sdk.NewKVStoreKey("fee_collection"),
 	}
 
+	// The AccountKeeper handles address -> account lookups
+	app.accountKeeper = auth.NewAccountKeeper(
+		app.cdc,
+		app.keyAccount,
+		auth.ProtoBaseAccount,
+	)
+
+	// The BankKeeper allows you perform sdk.Coins interactions
+	app.bankKeeper = bank.NewBaseKeeper(app.accountKeeper)
+
+	// The FeeCollectionKeeper collects transaction fees and renders them to the fee distribution module
+	app.feeCollectionKeeper = auth.NewFeeCollectionKeeper(cdc, app.keyFeeCollection)
+
+	// The NameservizKeeper is the Keeper from the module for this tutorial
+	// It handles interactions with the namestore
+	app.nsKeeper = nameserviz.NewKeeper(
+		app.bankKeeper,
+		app.keyNSnames,
+		app.keyNSowners,
+		app.keyNSprices,
+		app.cdc,
+	)
+
+	// The AnteHandler handles signature verification and transaction pre-processing
+	app.SetAnteHandler(auth.NewAnteHandler(app.accountKeeper, app.feeCollectionKeeper))
+
+	// TX routes - updates, POST, PUT
+	// The app.Router is the main transaction router where each module registers its routes
+	// Register the bank and nameserviz routes here
+	app.Router().
+		AddRoute("bank", bank.NewHandler(app.bankKeeper)).
+		AddRoute("nameserviz", nameserviz.NewHandler(app.nsKeeper))
+
+	// Query routes - GET
+	// The app.QueryRouter is the main query router where each module registers its routes
+	app.QueryRouter().
+		AddRoute("nameserviz", nameserviz.NewQuerier(app.nsKeeper))
+
+	// The initChainer handles translating the genesis.json file into initial state for the network
+	app.SetInitChainer(app.initChainer)
+
+	app.MountStores(
+		app.keyMain,
+		app.keyAccount,
+		app.keyNSnames,
+		app.keyNSowners,
+		app.keyNSprices,
+	)
+
+	err := app.LoadLatestVersion(app.keyMain)
+	if err != nil {
+		cmn.Exit(err.Error())
+	}
+
 	return app
 }
