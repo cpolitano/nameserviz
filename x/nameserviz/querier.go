@@ -22,7 +22,7 @@ func NewQuerier(keeper Keeper) sdk.Querier {
 		case QueryWhois:
 			return queryWhois(ctx, path[1:], req, keeper)
 		default:
-			return nil, sdk.ErrUnknownRequest("unknown nameservice query endpoint")
+			return nil, sdk.ErrUnknownRequest("unknown nameserviz query endpoint")
 		}
 	}
 }

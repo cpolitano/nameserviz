@@ -77,6 +77,12 @@ func NewMsgBuyName(name string, bid sdk.Coins, buyer sdk.AccAddress) MsgBuyName 
 	}
 }
 
+// Type Implements Msg.
+func (msg MsgBuyName) Route() string { return "nameserviz" }
+
+// Name Implements Msg.
+func (msg MsgBuyName) Type() string { return "buy_name" }
+
 // ValidateBasic Implements Msg.
 // pure function, cannot query appliction state
 func (msg MsgBuyName) ValidateBasic() sdk.Error {

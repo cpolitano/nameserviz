@@ -91,7 +91,7 @@ func buyNameHandler(cdc *codec.Codec, cliCtx context.CLIContext) http.HandlerFun
 		}
 
 		// create the message
-		msg := nameservice.NewMsgBuyName(req.Name, coins, addr)
+		msg := nameserviz.NewMsgBuyName(req.Name, coins, addr)
 		err = msg.ValidateBasic()
 		if err != nil {
 			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
@@ -130,7 +130,7 @@ func setNameHandler(cdc *codec.Codec, cliCtx context.CLIContext) http.HandlerFun
 		}
 
 		// create the message
-		msg := nameservice.NewMsgSetName(req.Name, req.Value, acc)
+		msg := nameserviz.NewMsgSetName(req.Name, req.Value, addr)
 		err = msg.ValidateBasic()
 		if err != nil {
 			utils.WriteErrorResponse(w, http.StatusBadRequest, err.Error())

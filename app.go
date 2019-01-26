@@ -40,7 +40,7 @@ type nameServizApp struct {
 	nsKeeper            nameserviz.Keeper
 }
 
-func NewNameServizApp(logger log.logger, db dbm.DB) *nameServizApp {
+func NewNameServizApp(logger log.Logger, db dbm.DB) *nameServizApp {
 
 	cdc := MakeCodec()
 

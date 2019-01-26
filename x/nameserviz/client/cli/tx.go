@@ -9,7 +9,7 @@ import (
 	"github.com/cpolitano/nameserviz/x/nameserviz" // importing this repo's code
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
+	//authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
 	authtxb "github.com/cosmos/cosmos-sdk/x/auth/client/txbuilder"
 )
 
@@ -38,7 +38,7 @@ func GetCmdBuyName(cdc *codec.Codec) *cobra.Command {
 				return err
 			}
 
-			msg := nameservice.NewMsgBuyName(args[0], coins, account)
+			msg := nameserviz.NewMsgBuyName(args[0], coins, account)
 			err = msg.ValidateBasic()
 			if err != nil {
 				return err
@@ -71,7 +71,7 @@ func GetCmdSetName(cdc *codec.Codec) *cobra.Command {
 				return err
 			}
 
-			msg := nameservice.NewMsgSetName(args[0], args[1], account)
+			msg := nameserviz.NewMsgSetName(args[0], args[1], account)
 			err = msg.ValidateBasic()
 			if err != nil {
 				return err

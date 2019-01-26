@@ -15,7 +15,7 @@ func NewHandler(keeper Keeper) sdk.Handler {
 		case MsgBuyName:
 			return handleMsgBuyName(ctx, keeper, msg)
 		default:
-			errMsg := fmt.Sprintf("Unrecognized nameservice Msg type: %v", msg.Type())
+			errMsg := fmt.Sprintf("Unrecognized nameserviz Msg type: %v", msg.Type())
 			return sdk.ErrUnknownRequest(errMsg).Result()
 		}
 	}

@@ -9,7 +9,7 @@ import (
 
 // connect to data store, get/set methods
 type Keeper struct {
-	coinKeeper bank.coinKeeper
+	coinKeeper bank.Keeper
 
 	namesStoreKey  sdk.StoreKey // key to access namesStore
 	ownersStoreKey sdk.StoreKey // key to owner of a given name

@@ -19,14 +19,14 @@ import (
 	bankcmd "github.com/cosmos/cosmos-sdk/x/bank/client/cli"
 	bank "github.com/cosmos/cosmos-sdk/x/bank/client/rest"
 	app "github.com/cpolitano/nameserviz"
-	nsclient "github.com/cpolitano/nameserviz/x/nameservice/client"
-	nsrest "github.com/cpolitano/nameserviz/x/nameservice/client/rest"
+	nsclient "github.com/cpolitano/nameserviz/x/nameserviz/client"
+	nsrest "github.com/cpolitano/nameserviz/x/nameserviz/client/rest"
 )
 
 
 const (
 	storeAcc = "acc"
-	storeNS  = "nameservice"
+	storeNS  = "nameserviz"
 )
 
 var defaultCLIHome = os.ExpandEnv("$HOME/.nscli") // see .xrncli
